@@ -42,8 +42,12 @@ def parens_match_iterative(mylist):
     >>>parens_match_iterative(['('])
     False
     """
-    ### TODO
-    pass
+    counter=0
+
+    counter=iterate(parens_update,0,mylist)
+
+    return True if (counter==0) else False
+    
 
 
 def parens_update(current_output, next_input):
@@ -58,14 +62,27 @@ def parens_update(current_output, next_input):
     Returns:
       the updated value of `current_output`
     """
-    ###TODO
-    pass
+    
+    if (next_input=="("):
+        current_output+=1
+    if (next_input==")"):
+        current_output-=1
+    if (current_output<0):
+        current_output=-100
+    return current_output
+
+
+
 
 
 def test_parens_match_iterative():
     assert parens_match_iterative(['(', ')']) == True
     assert parens_match_iterative(['(']) == False
     assert parens_match_iterative([')']) == False
+
+
+
+
 
 
 #### Scan solution
@@ -87,8 +104,32 @@ def parens_match_scan(mylist):
     False
     
     """
-    ###TODO
-    pass
+    
+    map=[]
+    
+    for paren in mylist:
+        map.append(paren_map(paren))
+    
+    tup=scan(plus,0,map)
+
+    min=reduce(min_f,0,tup[0])
+
+    if min<0:
+        return False
+    elif tup[1]==0:
+        return True
+    else:
+        return False
+
+## TOTW= W+R
+# W=2W(n/2)+n
+# R=2R(n/2)+1
+#--> TOTW=2TOTW(n/2)+n+1
+
+def plus(x,y):
+    return x+y
+
+
 
 def scan(f, id_, a):
     """
@@ -160,8 +201,24 @@ def parens_match_dc_helper(mylist):
       L is the number of unmatched left parentheses. This output is used by 
       parens_match_dc to return the final True or False value
     """
-    ###TODO
-    pass
+    
+
+    if len(mylist==1) and mylist[0]=="(":
+        return (1,0)
+    if len(mylist==1) and mylist[0]==")":
+        return (0,1)
+    
+    left=parens_match_dc_helper(mylist[:len(mylist)])
+    right=parens_match_dc_helper(mylist[len(mylist)//2:])
+
+
+    if(left[1]>right[0]):
+        return (left[0] - left[1] + right[0], right[1])
+    else:
+        return (left[0], left[1] - right[0] + right[1])
+        
+
+
     
 
 def test_parens_match_dc():
